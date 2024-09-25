@@ -1,24 +1,95 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* fonts */
+.montserrat-regular {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply montserrat-regular text-main  overflow-hidden;
+  }
+
+  main {
+    @apply w-full max-w-7xl mx-auto px-5;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+._heading-underline {
 }
+
+._heading-underline h3 {
+  position: relative;
+  padding: 10px 0;
+  @apply border-b border-gray/30;
+}
+
+._heading-underline h3::before {
+  position: absolute;
+  height: 4px;
+  width: 80px;
+  content: "";
+  bottom: -2.5px;
+  left: 0;
+  @apply bg-brand;
+}
+
+.recent-news-card:hover {
+  box-shadow: 0px 3px 10px 0px rgba(63, 112, 248, 0.15);
+}
+
+.box-shadow {
+  box-shadow: 0px 3px 10px 0px rgba(63, 112, 248, 0.15);
+}
+
+.category-news-card::before {
+  background: rgb(0, 0, 0);
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+/* animate submenu */
+.submenu {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.submenu-open {
+  max-height: 200px; /* Adjust based on submenu content */
+  opacity: 1;
+  transition: max-height 0.3s ease-in, opacity 0.3s ease-in;
+}
+
+
+/* forms */
+input[type="text"], input[type="password"] {
+  @apply w-full bg-brand/10 border-b-2 border-transparent px-4 py-2 rounded-md focus:outline-0 focus:border-0 focus:border-b-2 focus:border-brand mb-2;
+}
+
+/* forms */
+textarea {
+  @apply h-24 w-full bg-brand/10 border-b-2 border-transparent px-4 py-2 rounded-md focus:outline-0 focus:border-0 focus:border-b-2 focus:border-brand mb-2 resize-none;
+}
+
+.categori-list {
+  @apply px-4 py-2 border-b border-brand/20 flex items-center gap-3 font-semibold hover:bg-brand/5 transition-all duration-200
+}
+
+.nav-link {
+  @apply px-5 py-2 border-b border-brand/20 capitalize flex items-center gap-3 text-white
+}
+
 
 @layer utilities {
   .text-balance {
