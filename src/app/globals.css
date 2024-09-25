@@ -13,7 +13,7 @@
 
 @layer base {
   body {
-    @apply montserrat-regular text-main  overflow-hidden;
+    @apply montserrat-regular text-main overflow-x-hidden overflow-y-auto;
   }
 
   main {
