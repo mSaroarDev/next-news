@@ -1,4 +1,4 @@
-import { AlignJustify, ChevronDown, ChevronUp, Circle, ContactRound, FileText, LayoutPanelLeft, MessagesSquare } from "lucide-react";
+import { AlignJustify, ChevronDown, ChevronUp, Circle, ContactRound, FileText, Layers3, LayoutPanelLeft, MessageSquareDot, MessagesSquare } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -16,12 +16,23 @@ const Navlink = () => {
     },
     {
       id: 3,
+      name: "notifications",
+      icon: <MessageSquareDot className="w-4 h-4 text-brand" />,
+    },
+    {
+      id: 4,
+      name: "categories",
+      icon: <Layers3 className="w-4 h-4 text-brand" />,
+      childrens: ["Create New Category", "All Categories"],
+    },
+    {
+      id: 5,
       name: "posts",
       icon: <FileText className="w-4 h-4 text-brand" />,
       childrens: ["Create New Post", "All Posts"],
     },
     {
-      id: 4,
+      id: 6,
       name: "comments",
       icon: <MessagesSquare className="w-4 h-4 text-brand" />,
     },
@@ -61,7 +72,7 @@ const Navlink = () => {
             className={`pl-2 submenu ${showSubMenu === item.id ? 'submenu-open' : ''}`}
           >
             {item.childrens?.map((submenu, idx) => (
-              <Link key={idx} href="/" className="nav-link">
+              <Link key={idx} href={'/dashboard/' + submenu.split(" ").join("-").toLowerCase()} className="nav-link">
                 <Circle className="w-2 h-2" />
                 <span>{submenu}</span>
               </Link>

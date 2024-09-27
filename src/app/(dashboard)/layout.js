@@ -2,11 +2,8 @@
 import AdminTopbar from "@/components/AdminTopbar";
 import Navlink from "@/components/Navlink";
 import { H1 } from "@/subcomponents/Headings";
-import { ChevronDown, ChevronUp, Circle, LayoutPanelLeft } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
 
-export default function Layout() {
+export default function Layout({ children }) {
   return (
     <>
       {/* sidebar */}
@@ -23,6 +20,11 @@ export default function Layout() {
 
       {/* topbar */}
       <AdminTopbar />
+
+      {/* childrens */}
+      <div className="ml-0 md:ml-[250px] mt-20 px-5 md:px-7 py-5">
+        {children}
+      </div>
     </>
   );
 }

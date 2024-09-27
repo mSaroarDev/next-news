@@ -8,6 +8,15 @@ export const Form = ({ children, onSubmit, className = "" }) => {
   );
 };
 
+export const Label = ({ text, className = "" }) => (
+  <label
+    className={`w-full font-semibold inline-block ${className}`}
+    style={{ marginBottom: "4px" }}
+  >
+    {text}
+  </label>
+);
+
 export const Input = ({
   type = "text",
   onChange,
@@ -40,6 +49,29 @@ export const Texarea = ({ onChange, id, name, value, placeholder }) => {
         value={value}
         placeholder={placeholder || "Enter Placeholder"}
       ></textarea>
+    </>
+  );
+};
+
+export const Select = ({
+  onChange,
+  id,
+  name,
+  value,
+  placeholder,
+  children,
+}) => {
+  return (
+    <>
+      <select
+        onChange={onChange}
+        id={id}
+        name={name}
+        value={value}
+        placeholder={placeholder || "Enter Placeholder"}
+      >
+        {children}
+      </select>
     </>
   );
 };

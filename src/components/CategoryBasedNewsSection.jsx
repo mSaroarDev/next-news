@@ -16,7 +16,7 @@ const CategoryBasedNewsSection = () => {
       {/* category based news */}
       <motion.main
         ref={categoryBasedNews}
-        id="categoryBasedNews"
+        id={categoryBasedNews}
         initial={{ opacity: 0, y: "100px" }}
         animate={inView && { opacity: 1, y: 0 }}
         transition={{ duration: 1 }}

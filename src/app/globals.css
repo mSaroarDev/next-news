@@ -21,9 +21,6 @@
   }
 }
 
-._heading-underline {
-}
-
 ._heading-underline h3 {
   position: relative;
   padding: 10px 0;
@@ -73,7 +70,7 @@
 
 
 /* forms */
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="password"], select {
   @apply w-full bg-brand/10 border-b-2 border-transparent px-4 py-2 rounded-md focus:outline-0 focus:border-0 focus:border-b-2 focus:border-brand mb-2;
 }
 
@@ -87,7 +84,11 @@ textarea {
 }
 
 .nav-link {
-  @apply px-5 py-2 border-b border-brand/20 capitalize flex items-center gap-3 text-white
+  @apply px-5 py-2.5 border-b border-brand/20 capitalize flex items-center gap-3 text-white
+}
+
+.button-dark {
+  @apply bg-black text-white rounded-md border border-black text-main font-semibold px-5 py-2
 }
 
 

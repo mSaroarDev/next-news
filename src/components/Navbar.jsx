@@ -55,7 +55,7 @@ const Navbar = () => {
           </motion.div>
         </main>
 
-        {showMenu && <MobileNav show={showMenu} />}
+        {showMenu && <MobileNav setShowMenu={setShowMenu} show={showMenu} />}
       </div>
     </>
   );

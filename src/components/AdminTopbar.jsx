@@ -9,7 +9,7 @@ const AdminTopbar = () => {
 
   return (
     <>
-      <div className="ml-0 md:ml-[250px] w-full md:w-auto shadow-md fixed top-0 left-0 right-0 z-50">
+      <div className="bg-white ml-0 md:ml-[250px] w-full md:w-auto shadow-md fixed top-0 left-0 right-0 z-50">
         <div className="flex items-center justify-between md:justify-end p-3">
           <H1 className="text-lg md:hidden" text={"NextNews"} />
           <div className="flex items-center justify-center gap-2">
@@ -44,7 +44,7 @@ const AdminTopbar = () => {
         initial={{ opacity: 0, x: "100%" }}
         animate={showMobileMenu ? { opacity: 1, x: 0 } : { x: "100%", display: "none" }}
         transition={{ duration: .5, stiffness: { x: 60 } }}
-        className="mt-16 h-[90vh] md:hidden items-center justify-center bg-black overflow-hidden"
+        className="mt-16 h-[90vh] md:hidden items-center justify-center bg-black overflow-hidden fixed bottom-0 left-0 right-0 z-50"
       >
         <div className="md:hidden w-full flex flex-col pt-14">
           <Navlink />
