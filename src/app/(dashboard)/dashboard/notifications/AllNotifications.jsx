@@ -15,7 +15,7 @@ const AllNotifications = () => {
         className="border border-brand/20 rounded-xl p-5"
       >
         <div className="pb-5 border-b border-brand/20 px-5 flex items-center justify-between">
-          <H5 text={"All Comments"} />
+          <H5 text={"Notifications"} />
 
           {/* search bar */}
           <div className="flex items-center border-2 border-brand/20 rounded-lg px-2">

@@ -32,7 +32,7 @@ export const H4 = ({ text, className = "" }) => (
 
 export const H5 = ({ text, className = "" }) => (
   <h5
-    className={`text-[20px] font-bold leading-[20px] text-black ${className}`}
+    className={`text-[18px] font-bold leading-[20px] text-black ${className}`}
   >
     {text}
   </h5>
