@@ -1,6 +1,7 @@
 import Toploader from "@/components/Toploader";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 
 const MontserratRegular = localFont({
   src: "./fonts/Montserrat-Regular.ttf",
@@ -17,6 +18,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${MontserratRegular.variable} antialiased`}>
+        <Toaster />
         <Toploader />
         {children}
       </body>
