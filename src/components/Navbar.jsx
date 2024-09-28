@@ -9,7 +9,7 @@ import MobileNav from "./MobileNav";
 
 const Navbar = () => {
   const [showMenu, setShowMenu] = useState(false);
-
+  
   return (
     <>
       <div className="bg-white py-4 w-full fixed top-0 left-0 z-50 overflow-hidden">
