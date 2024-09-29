@@ -6,6 +6,8 @@ import bcrypt from "bcrypt";
 export async function POST(req, res) {
   // get values
   const formData = await req.json();
+  console.log("formData", formData);
+
   const { email, password } = formData;
 
   try {

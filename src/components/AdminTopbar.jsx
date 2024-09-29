@@ -3,25 +3,31 @@ import { AlignJustify, X } from "lucide-react";
 import { useState } from "react";
 import Navlink from "./Navlink";
 import { motion } from "framer-motion";
+import { useSelector } from "react-redux";
 
 const AdminTopbar = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  
+  // redux store
+  const currUser = useSelector((state) => state.currUser);
+  const { userData } = currUser;
+  
 
   return (
     <>
       <div className="bg-white ml-0 md:ml-[250px] w-full md:w-auto shadow-md fixed top-0 left-0 right-0 z-50">
         <div className="flex items-center justify-between md:justify-end p-3">
           <H1 className="text-lg md:hidden" text={"NextNews"} />
-          <div className="flex items-center justify-center gap-2">
-            <div>
-              <H3 className="text-base font-semibold" text="Saroar Jahan" />
-              <P className="-mt-2" text="Content Writer" />
+          <div className="flex items-center justify-center gap-4">
+            <div className="text-right">
+              <H3 className="text-base font-semibold" text={userData.name} />
+              <P className="-mt-2" text={userData.designation} />
             </div>
-            <div className="w-10 h-10 rounded-full overflow-hidden">
+            <div className="w-10 h-10 rounded-full ring overflow-hidden">
               <img
-                src="https://diony.co.uk/wp-content/themes/diony/assets/images/placeholder-news.jpeg"
+                src={userData.image}
                 className="w-full h-full object-cover"
-                alt="Title"
+                alt={userData.name}
               />
             </div>
             <button

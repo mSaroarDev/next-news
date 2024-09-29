@@ -1,70 +1,47 @@
 import { connectDB } from "@/db/connectDB";
 import userModel from "@/db/models/user";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import { SetCookie } from "@/libs/SetCookie";
 import { NextResponse } from "next/server";
+import bcrypt from "bcrypt";
 
 export async function POST(req, res) {
-  const formData = await req.json();
-
   try {
     await connectDB();
+    const formData = await req.json();
+    const { email, password } = formData;
 
-    const existUser = await userModel.findOne({ email: formData.email });
+    const isUser = await userModel.findOne({ email });
 
-    if (!existUser) {
+    if (!isUser) {
       return NextResponse.json(
-        { msg: "failed", data: "user not found" },
+        { msg: "failed", data: "no user found" },
         { status: 401 }
       );
     }
 
-    const isValidPassword = bcrypt.compareSync(
-      formData.password,
-      existUser.password
-    );
-
+    const isValidPassword = bcrypt.compareSync(password, isUser.password);
+    console.log("isValidPassword", isValidPassword);
     if (!isValidPassword) {
       return NextResponse.json(
-        { msg: "failed", data: "wrong password" },
+        { msg: "failed", data: "invalid credentials" },
         { status: 401 }
       );
     }
 
-    if (existUser && isValidPassword) {
-      // generate token
-      const token = jwt.sign(
+    if (isUser && isValidPassword) {
+      const cookie = await SetCookie(isUser._id, isUser.name, isUser.email);
+      return NextResponse.json(
         {
-          id: existUser._id,
-          name: existUser.name,
-          email: existUser.email,
+          msg: "success",
+          data: {
+            ...isUser,
+            id: isUser._id,
+          },
         },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "1h",
-        }
+        { status: 200, headers: cookie }
       );
-
-      // Create a NextResponse object
-      const response = NextResponse.json(
-        { msg: "success", data: "logged in" },
-        { status: 200 }
-      );
-
-      // Set the cookie
-      response.cookies.set("_private_key", token, {
-        path: "/",
-        httpOnly: true,
-        sameSite: "strict",
-        secure: true,
-        expires: new Date(Date.now() + 1 * 60 * 60 * 1000), // 1 hour expiration
-      });
-
-      // Return the response with the cookie
-      return response;
     }
   } catch (error) {
-    console.log("error in 'api/auth/login", error);
-    return NextResponse.json({ msg: "error", data: error }, { status: 500 });
+    return NextResponse.json({ msg: "failed", data: "somethi" });
   }
 }

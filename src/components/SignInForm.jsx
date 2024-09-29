@@ -1,16 +1,20 @@
 "use client";
-import { userLogin } from "@/libs/user";
+import { setCurrUser } from "@/features/user/currUserSlice";
+import { setLogged } from "@/features/user/loginSlice";
+import { myProfile, userLogin } from "@/libs/user";
 import ButtonSpinner from "@/subcomponents/Button Spinner/ButtonSpinner";
 import { Form, Input } from "@/subcomponents/Forms";
 import { showError, showSuccess } from "@/utils/toaster";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 const SignInForm = () => {
   // utils
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   // formik
   const formik = useFormik({
@@ -37,10 +41,17 @@ const SignInForm = () => {
           showSuccess("Logged in");
           router.refresh();
           router.replace("/dashboard/overview");
+          
+          // store user data in redux store
+          const data = await res.json();
+          const currUser = await myProfile(data.data.id)
+          dispatch(setLogged(true));
+          dispatch(setCurrUser(currUser.data));
         } else {
           showError("Somethin is wrong");
         }
       } catch (error) {
+        console.log("error", error);
         showError("Internal Server Error");
       } finally {
         setLoading(false);

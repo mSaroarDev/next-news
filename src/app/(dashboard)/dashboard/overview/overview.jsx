@@ -2,8 +2,10 @@
 import LastPost from "@/components/Lastpost";
 import OverviewCard from "@/components/OverviewCard";
 import { motion } from "framer-motion";
+import { useSelector } from "react-redux";
 
 const Overview = () => {
+
   return (
     <>
       <motion.div
@@ -24,6 +26,8 @@ const Overview = () => {
           </div>
         </div>
       </motion.div>
+
+      
     </>
   );
 };

@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 
 const PageComp = () => {
+
+
   return (
     <>
       <div className="h-screen w-full overflow-hidden">

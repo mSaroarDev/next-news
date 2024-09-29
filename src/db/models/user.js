@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    dob: {
+    designation: {
       type: String,
       required: false,
     },
