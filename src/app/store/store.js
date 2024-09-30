@@ -5,10 +5,12 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
 import loginReducer from "@/features/user/loginSlice";
 import currUserReducer from "@/features/user/currUserSlice";
+import notificationsReducer from "@/features/notifications/notificationSlice";
 
 const rootReducer = combineReducers({
   login: loginReducer,
   currUser: currUserReducer,
+  notifications: notificationsReducer,
 });
 
 const persistConfig = {

@@ -1,32 +1,57 @@
 import { H6, P } from "@/subcomponents/Headings";
-import { MessagesSquare } from "lucide-react";
+import { convertDateToCustomFormat } from "@/utils/convertDate";
+import {
+  LogIn,
+  MessagesSquare,
+  Share2,
+  ThumbsDown,
+  ThumbsUp,
+  UserRoundCheck,
+} from "lucide-react";
 import Link from "next/link";
 
-const NotificationCard = () => {
+const NotificationCard = ({ data }) => {
+  const { type, created_by, notification_on, text, createdAt } = data;
+  // generate icon
+  const generateIcon = () => {
+    if (type === "loggin") {
+      return <UserRoundCheck className="w-4 h-4 text-green-600" />;
+    } else if (type === "comment") {
+      return <MessagesSquare className="w-4 h-4" />;
+    } else if (type === "like") {
+      return <ThumbsUp className="w-4 h-4" />;
+    } else if (type === "unlike") {
+      return <ThumbsDown className="w-4 h-4" />;
+    } else if (type === "share") {
+      return <Share2 className="w-4 h-4" />;
+    }
+  };
+
   return (
     <>
       <div className="p-4 box-shadow">
         <div>
           <div className="flex items-start gap-4">
-            <div className="bg-brand/40 text-black min-w-8 h-8 flex items-center justify-center rounded-md">
-                <MessagesSquare className="w-4 h-4 mt-1" />
+            <div className="bg-brand/10 text-black min-w-8 h-8 flex items-center justify-center rounded-md mt-1">
+              {generateIcon()}
             </div>
             <div>
-              <p
-                className="text-black"
-              >
-                {`Mustafiz Commented on the post
-                  "Dr. Yunus said this at a reception hosted marking the 50th year of Bangladesh's membership in the United Nations Tuesday evening"
+              <p className="text-black">
+                <span className="capitalize font-semibold">{created_by || "a user"}</span> {" "}
+                {`${text}
+                  ${notification_on ? notification_on : ""}
                 `}
               </p>
-              
-                <div className="mt-3 flex flex-col md:flex-row gap-1 md:gap-2">
-                  <p className="text-sm text-gray">
-                    on: 24 Jun, 2024 - 08.00 PM
-                  </p>
-                  <Link href='/' className="text-sm text-black underline">view Post</Link>
-                </div>
-            
+
+              <div className="mt-3 flex flex-col md:flex-row gap-1 md:gap-2">
+                <p className="text-sm text-gray">on: {convertDateToCustomFormat(createdAt)}</p>
+
+                {notification_on && (
+                  <Link href="/" className="text-sm text-black underline">
+                    view Post
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         </div>

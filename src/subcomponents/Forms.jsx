@@ -24,6 +24,7 @@ export const Input = ({
   name,
   value,
   placeholder,
+  ...rest
 }) => {
   return (
     <>
@@ -34,6 +35,7 @@ export const Input = ({
         name={name}
         value={value}
         placeholder={placeholder || "Enter Placeholder"}
+        {...rest}
       />
     </>
   );

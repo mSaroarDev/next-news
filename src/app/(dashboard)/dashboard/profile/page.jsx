@@ -6,9 +6,7 @@ const ProfilePage = async () => {
   // utils
   const headerList = headers();
   const currUserId = headerList.get("id")
-  console.log("currUserId", currUserId);
   
-
   const existUserData = await myProfile(currUserId)
   return (
     <>

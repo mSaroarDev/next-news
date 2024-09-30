@@ -1,6 +1,7 @@
 "use client";
 import { setCurrUser } from "@/features/user/currUserSlice";
 import { setLogged } from "@/features/user/loginSlice";
+import { createNotification } from "@/libs/notification";
 import { myProfile, userLogin } from "@/libs/user";
 import ButtonSpinner from "@/subcomponents/Button Spinner/ButtonSpinner";
 import { Form, Input } from "@/subcomponents/Forms";
@@ -41,14 +42,23 @@ const SignInForm = () => {
           showSuccess("Logged in");
           router.refresh();
           router.replace("/dashboard/overview");
-          
+
           // store user data in redux store
           const data = await res.json();
-          const currUser = await myProfile(data.data.id)
+
+          const currUser = await myProfile(data?.data?.id);
+
           dispatch(setLogged(true));
           dispatch(setCurrUser(currUser.data));
+
+          // update notifications
+          await createNotification({
+            type: "loggin",
+            created_by: currUser?.data?.name,
+            text: "logged in",
+          });
         } else {
-          showError("Somethin is wrong");
+          showError("Something is wrong");
         }
       } catch (error) {
         console.log("error", error);

@@ -2,10 +2,30 @@
 import { H5 } from "@/subcomponents/Headings";
 import { Search } from "lucide-react";
 import { motion } from "framer-motion";
-import Comments from "@/components/Comments";
 import NotificationCard from "@/components/NotificationCard";
+import { useDispatch, useSelector } from "react-redux";
+import { setNotifications } from "@/features/notifications/notificationSlice";
+import { getNotification } from "@/libs/notification";
+import { useEffect } from "react";
 
 const AllNotifications = () => {
+  // redux store
+  const dispatch = useDispatch();
+  const notificationsState = useSelector((state) => state.notifications);
+  const { notificationData } = notificationsState;
+
+  // fetch notifications
+  const getAllNotification = async () => {
+    const res = await getNotification();
+    if (res.msg === "success") {
+      dispatch(setNotifications(res.data));
+    }
+  };
+
+  useEffect(() => {
+    getAllNotification();
+  }, []);
+
   return (
     <>
       <motion.section
@@ -31,13 +51,10 @@ const AllNotifications = () => {
 
         {/* main contents */}
         <div className="mt-5">
-          <NotificationCard />
-          <NotificationCard />
-          <NotificationCard />
-          <NotificationCard />
-          <NotificationCard />
-          <NotificationCard />
-          <NotificationCard />
+          {notificationData &&
+            notificationData?.map((item, i) => (
+              <NotificationCard key={i} data={item} />
+            ))}
         </div>
       </motion.section>
     </>

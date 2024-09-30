@@ -1,6 +1,8 @@
+import { getNotification } from "@/libs/notification";
 import AllNotifications from "./AllNotifications";
 
-const page = () => {
+const page = async () => {
+
   return (
     <>
       <AllNotifications />

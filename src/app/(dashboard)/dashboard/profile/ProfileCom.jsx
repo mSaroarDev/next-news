@@ -13,7 +13,6 @@ import { updateProfile } from "@/libs/user";
 import { setCurrUser } from "@/features/user/currUserSlice";
 
 const ProfileCom = ({ existUserData }) => {
-  console.log(existUserData);
   
   // utils
   const [loading, setLoading] = useState(false);
@@ -41,7 +40,6 @@ const ProfileCom = ({ existUserData }) => {
   const [image, setImage] = useState(null);
   const handleImageUpload = function (result) {
     const info = result?.info;
-    console.log("info", info);
 
     if ("secure_url" in info && "public_id" in info) {
       const public_id = info.public_id;
@@ -110,7 +108,7 @@ const ProfileCom = ({ existUserData }) => {
               }}
               onSuccess={handleImageUpload}
             >
-              <div className="w-[150px] h-[150px] border border-dashed border-brand flex flex-col items-center justify-center">
+              <div className="w-[150px] h-[150px] border border-dashed border-brand flex flex-col items-center justify-center rounded-md overflow-hidden">
                 {image ? (
                   <img
                     src={image}
@@ -179,6 +177,7 @@ const ProfileCom = ({ existUserData }) => {
                 onChange={formik.handleChange}
                 value={formik.values.email}
                 placeholder="Enter email"
+                disabled
               />
             </div>
           </div>
