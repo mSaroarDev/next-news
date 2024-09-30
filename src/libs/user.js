@@ -49,3 +49,22 @@ export const updateProfile = async (id, values) => {
     return null;
   }
 };
+
+// my profile
+export const logout = async () => {
+  try {
+    const res = await fetch(
+      process.env.NEXT_PUBLIC_BASE_URL + "/api/auth/logout",
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log("error in api call api/auth/logout", error);
+    return null;
+  }
+};

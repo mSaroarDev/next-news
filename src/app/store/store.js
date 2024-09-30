@@ -7,11 +7,23 @@ import loginReducer from "@/features/user/loginSlice";
 import currUserReducer from "@/features/user/currUserSlice";
 import notificationsReducer from "@/features/notifications/notificationSlice";
 
-const rootReducer = combineReducers({
-  login: loginReducer,
-  currUser: currUserReducer,
-  notifications: notificationsReducer,
-});
+const rootReducer = (state, action) => {
+  if (action.type === "RESET") {
+    // Purge the persisted state
+    storage.removeItem("persist:root"); // Adjust the key if different
+    return combineReducers({
+      login: loginReducer,
+      currUser: currUserReducer,
+      notifications: notificationsReducer,
+    })(undefined, action); // Pass undefined to reset to initial state
+  }
+
+  return combineReducers({
+    login: loginReducer,
+    currUser: currUserReducer,
+    notifications: notificationsReducer,
+  })(state, action);
+};
 
 const persistConfig = {
   key: "root",
