@@ -6,11 +6,39 @@ import { H5, H6 } from "@/subcomponents/Headings";
 import { motion } from "framer-motion";
 import { Upload } from "lucide-react";
 import { Tags } from "./Tags";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { useFormik } from "formik";
 
 // dummy tags
 const tags = ['world', 'bangladesh', 'politics', "international"]
 
 const CreatePost = () => {
+  // utils
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  // get user info from redux
+  const currUser = useSelector(state=> state.currUser);
+  const {userData} = currUser;
+
+  // tags state
+  const [tags, setTags] = useState([]);
+
+  // formik
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      description: "",
+      category: '',
+      image: '',
+      tags: '',
+      created_by: userData?.id
+    }
+  })
+
   return (
     <>
       <motion.div
