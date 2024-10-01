@@ -5,11 +5,8 @@ import Navlink from "./Navlink";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/libs/user";
-import { setCurrUser } from "@/features/user/currUserSlice";
-import { setLogged } from "@/features/user/loginSlice";
 import { showSuccess } from "@/utils/toaster";
 import { useRouter } from "next/navigation";
-import { setNotifications } from "@/features/notifications/notificationSlice";
 import { persistor } from "@/app/store/store";
 
 const AdminTopbar = () => {
@@ -30,12 +27,9 @@ const AdminTopbar = () => {
       const res = await logout();
       if (res.msg === "success") {
         showSuccess("Loggged out");
-        // dispatch(setCurrUser({}));
-        // dispatch(setLogged(false));
-        // dispatch(setNotifications([]));
-        dispatch({ type: "RESET" }); // Reset the Redux store
         persistor.purge(); // Clear the persisted store
         router.push("/login");
+        dispatch({ type: "RESET" }); // Reset the Redux store
       } else {
         showSuccess("Log out failed");
       }

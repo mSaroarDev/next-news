@@ -15,9 +15,9 @@ export async function POST(req, res) {
 
     const data = await newData.save();
 
-    return NextResponse.json({ msg: "success", data });
+    return NextResponse.json({ msg: "success", data }, { status: 200 });
   } catch (error) {
     console.log("error in api/notifications/create", error);
-    return NextResponse.json({ msg: "success", data });
+    return NextResponse.json({ msg: "error" }, { status: 500 });
   }
 }

@@ -6,6 +6,7 @@ import storage from "redux-persist/lib/storage"; // defaults to localStorage for
 import loginReducer from "@/features/user/loginSlice";
 import currUserReducer from "@/features/user/currUserSlice";
 import notificationsReducer from "@/features/notifications/notificationSlice";
+import categoriesReducer from "@/features/category/categorySlice";
 
 const rootReducer = (state, action) => {
   if (action.type === "RESET") {
@@ -15,6 +16,7 @@ const rootReducer = (state, action) => {
       login: loginReducer,
       currUser: currUserReducer,
       notifications: notificationsReducer,
+      categories: categoriesReducer,
     })(undefined, action); // Pass undefined to reset to initial state
   }
 
@@ -22,6 +24,7 @@ const rootReducer = (state, action) => {
     login: loginReducer,
     currUser: currUserReducer,
     notifications: notificationsReducer,
+    categories: categoriesReducer,
   })(state, action);
 };
 

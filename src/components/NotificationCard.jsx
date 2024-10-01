@@ -1,6 +1,7 @@
 import { H6, P } from "@/subcomponents/Headings";
 import { convertDateToCustomFormat } from "@/utils/convertDate";
 import {
+  CalendarPlus,
   LogIn,
   MessagesSquare,
   Share2,
@@ -24,6 +25,8 @@ const NotificationCard = ({ data }) => {
       return <ThumbsDown className="w-4 h-4" />;
     } else if (type === "share") {
       return <Share2 className="w-4 h-4" />;
+    }else if (type === "category create") {
+      return <CalendarPlus className="w-4 h-4 text-purple-600" />;
     }
   };
 

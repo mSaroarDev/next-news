@@ -12,6 +12,14 @@ export async function CheckCookieAuth(req) {
     requestHeaders.set("name", payload["name"]);
     requestHeaders.set("designation", payload["designation"]);
     requestHeaders.set("image", payload["image"]);
+    requestHeaders.set(
+      "currUser",
+      JSON.stringify({
+        id: payload["id"],
+        name: payload["name"],
+      })
+    );
+
     return NextResponse.next({
       request: { headers: requestHeaders },
     });
