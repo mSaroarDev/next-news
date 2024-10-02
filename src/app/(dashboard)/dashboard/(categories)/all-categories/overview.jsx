@@ -1,7 +1,6 @@
 "use client";
 import CategoryCard from "@/components/CategoryCard";
-import { fetchCategories, setCategories } from "@/features/category/categorySlice";
-import { getAllCategory } from "@/libs/category";
+import { fetchCategories } from "@/features/category/categorySlice";
 import { H5 } from "@/subcomponents/Headings";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";

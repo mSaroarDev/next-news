@@ -7,7 +7,7 @@ const CategoryCard = ({ data }) => {
     <>
       <Link
         href={`/dashboard/all-categories/${data?._id}`}
-        className="col-span-6 md:col-span-4 lg:col-span-3 flex items-start gap-3 px-7 py-5 box-shadow rounded-md"
+        className="col-span-6 lg:col-span-4 xl:col-span-3 flex items-start gap-3 px-7 py-5 box-shadow rounded-md"
       >
         <BookmarkCheck className="min-w-7 h-7 text-brand mt-1" />
         <div>
