@@ -1,18 +1,15 @@
 "use client";
-import LastPost from "@/components/Lastpost";
-import OverviewCard from "@/components/OverviewCard";
 import { Form, Input, Label, Select, Texarea } from "@/subcomponents/Forms";
 import { H5, H6 } from "@/subcomponents/Headings";
 import { motion } from "framer-motion";
-import { Upload } from "lucide-react";
+import { Image } from "lucide-react";
 import { Tags } from "./Tags";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
-
-// dummy tags
-const tags = ['world', 'bangladesh', 'politics', "international"]
+import { CldUploadButton } from "next-cloudinary";
+import { showError } from "@/utils/toaster";
 
 const CreatePost = () => {
   // utils
@@ -21,23 +18,63 @@ const CreatePost = () => {
   const dispatch = useDispatch();
 
   // get user info from redux
-  const currUser = useSelector(state=> state.currUser);
-  const {userData} = currUser;
+  const categories = useSelector((state) => state.categories);
+  const { categoriesData } = categories;
+
+  const currUser = useSelector((state) => state.currUser);
+  const { userData } = currUser;
 
   // tags state
+  const [inputTag, setInputTag] = useState("");
   const [tags, setTags] = useState([]);
+  const handleAddTags = (e) => {
+    e.preventDefault();
+    if(inputTag == ""){
+      return showError("Please input related keywords")
+    }
+
+    const updatedTags = [...tags, inputTag];
+    setTags(updatedTags);
+    setInputTag("");
+    formik.setFieldValue("tags", updatedTags);
+  };
+
+  const handleDeleteTags = (e, index) => {
+    e.preventDefault();
+    const remainingTags = tags.filter((_, i) => i !== index); // Use the index to filter the correct tag
+    setTags(remainingTags);
+    formik.setFieldValue("tags", remainingTags);
+  };
+
+  // cloudinary image
+  const [image, setImage] = useState(null);
+  const handleImageUpload = function (result) {
+    const info = result?.info;
+
+    if ("secure_url" in info && "public_id" in info) {
+      const public_id = info.public_id;
+      const imgUrl = info.secure_url;
+      // setPublicId(public_id);
+      setImage(imgUrl);
+      formik.setFieldValue("image", imgUrl);
+      // formik.setFieldValue("image_public_id", public_id);
+    }
+  };
 
   // formik
   const formik = useFormik({
     initialValues: {
       title: "",
       description: "",
-      category: '',
-      image: '',
-      tags: '',
-      created_by: userData?.id
-    }
-  })
+      category: "",
+      image: "",
+      tags: tags,
+      created_by: userData?.id,
+    },
+    onSubmit: async (values) => {
+      console.log("values", values);
+    },
+  });
 
   return (
     <>
@@ -51,77 +88,148 @@ const CreatePost = () => {
         <H5 text={"Add New Post"} className="text-lg font-bold" />
 
         {/* profile update */}
-        <Form className="mt-5">
+        <Form onSubmit={formik.handleSubmit} className="mt-5">
           <div className="grid grid-cols-12 gap-5">
             {/* form */}
             <div className="col-span-12 md:col-span-9 grid grid-cols-12 gap-5 h-fit">
               <div className="w-full col-span-12">
                 <Label text={"Title"} />
-                <Input />
+                <Input
+                  id="title"
+                  name="title"
+                  onChange={formik.handleChange}
+                  value={formik.values.title}
+                  placeholder="Title"
+                />
               </div>
 
               <div className="w-full col-span-12">
                 <Label text={"Content"} />
-                <Texarea />
+                <Texarea
+                  id="description"
+                  name="description"
+                  onChange={formik.handleChange}
+                  value={formik.values.description}
+                  placeholder="Post Content"
+                />
               </div>
-
             </div>
 
             {/* sidebar items */}
             <div className="col-span-12 md:col-span-3">
-                {/* publish */}
-                <div className="w-full border border-brand/20 px-4 py-2 mb-5">
-                    <H6 text={"Publish"} className="text-base font-bold border-b border-brand/20 pb-2" />
-                    <div className="py-2">
-                        <p className="text-sm text-gray">Status: not Saved</p>
-                        <p className="text-sm text-gray">Visibility: Public</p>
-                        <p className="text-sm text-gray">Publish: Immidiately</p>
-                    </div>
-                    <button className="button-dark w-full mt-2 rounded-none">Publish</button>
+              {/* publish */}
+              <div className="w-full border border-brand/20 px-4 py-2 mb-5">
+                <H6
+                  text={"Publish"}
+                  className="text-base font-bold border-b border-brand/20 pb-2"
+                />
+                <div className="py-2">
+                  <p className="text-sm text-gray">Status: not Saved</p>
+                  <p className="text-sm text-gray">Visibility: Public</p>
+                  <p className="text-sm text-gray">Publish: Immidiately</p>
                 </div>
+                <button
+                  type="submit"
+                  className="button-dark w-full mt-2 rounded-none"
+                >
+                  Publish
+                </button>
+              </div>
 
-                {/* category */}
-                <div className="w-full border border-brand/20 px-4 py-2 mb-5">
-                    <H6 text={"Category"} className="text-base font-bold border-b border-brand/20 pb-2" />
-                    <div className="py-2">
-                        <Select>
-                            <option value="">Select Category</option>
-                            <option value="">Select Category</option>
-                            <option value="">Select Category</option>
-                            <option value="">Select Category</option>
-                            <option value="">Select Category</option>
-                        </Select>
-                    </div>
+              {/* category */}
+              <div className="w-full border border-brand/20 px-4 py-2 mb-5">
+                <H6
+                  text={"Category"}
+                  className="text-base font-bold border-b border-brand/20 pb-2"
+                />
+                <div className="py-2">
+                  <Select
+                    id="category"
+                    name="category"
+                    onChange={formik.handleChange}
+                    value={formik.values.category}
+                  >
+                    <option value="">Select Category</option>
+                    {categoriesData &&
+                      categoriesData?.map((item, i) => (
+                        <option key={i} value={item?._id}>
+                          {item?.categoryName}
+                        </option>
+                      ))}
+                  </Select>
                 </div>
+              </div>
 
-                {/* featured image */}
-                <div className="w-full border border-brand/20 px-4 py-2 mb-5">
-                    <H6 text={"Featured Image"} className="text-base font-bold border-b border-brand/20 pb-2" />
-                    <div className="py-2">
-                        <div className="border border-dashed border-brand/40 w-full h-[150px] flex flex-col gap-1 items-center justify-center">
-                            <Upload className="w-5 h-5" />
-                            <p className="text-sm mt-2">Upload Photo</p>
-                        </div>
+              {/* featured image */}
+              <div className="w-full border border-brand/20 px-4 py-2 mb-5">
+                <H6
+                  text={"Featured Image"}
+                  className="text-base font-bold border-b border-brand/20 pb-2"
+                />
+                <div className="py-2">
+                  <CldUploadButton
+                    className="border border-dashed border-brand/40 w-full h-[150px] flex flex-col gap-1 items-center justify-center"
+                    uploadPreset={
+                      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+                    }
+                    options={{
+                      sources: ["local", "google_drive"],
+                    }}
+                    onSuccess={handleImageUpload}
+                  >
+                    <div className="grid place-items-center">
+                      {image ? (
+                        <img
+                          src={image}
+                          className="w-full h-full object-cover"
+                          alt="Image"
+                        />
+                      ) : (
+                        <>
+                          <Image className="w-5 h-5" />
+                          <p className="text-sm mt-2">Click to Upload</p>
+                        </>
+                      )}
                     </div>
+                  </CldUploadButton>
                 </div>
+              </div>
 
-                {/* tags */}
-                <div className="w-full border border-brand/20 px-4 py-2 mb-5">
-                    <H6 text={"Tags"} className="text-base font-bold border-b border-brand/20 pb-2" />
-                    <div className="py-2">
-                        <div className="flex items-center gap-1">
-                            <Input />
-                            <button className="bg-black text-white rounded-md border border-black text-main font-semibold px-5 py-1.5 -mt-1.5">Add</button>
-                        </div>
+              {/* tags */}
+              <div className="w-full border border-brand/20 px-4 py-2 mb-5">
+                <H6
+                  text={"Tags"}
+                  className="text-base font-bold border-b border-brand/20 pb-2"
+                />
+                <div className="py-2">
+                  <div className="flex items-center gap-1">
+                    <Input
+                      onChange={(e) => setInputTag(e.target.value)}
+                      value={inputTag}
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddTags}
+                      className="bg-black text-white rounded-md border border-black text-main font-semibold px-5 py-1.5 -mt-1.5"
+                    >
+                      Add
+                    </button>
+                  </div>
 
-                        <div className="mt-5 flex flex-wrap items-center gap-1">
-                            {tags?.map((item, i)=> <Tags key={i} text={item} />)}
-                        </div>
-                    </div>
+                  <div className="mt-5 flex flex-wrap items-center gap-1">
+                    {tags?.map((item, i) => (
+                      <Tags
+                        key={i}
+                        text={item}
+                        handleDeleteTags={handleDeleteTags}
+                        index={i}
+                      />
+                    ))}
+                  </div>
                 </div>
+              </div>
             </div>
           </div>
-
         </Form>
       </motion.div>
     </>

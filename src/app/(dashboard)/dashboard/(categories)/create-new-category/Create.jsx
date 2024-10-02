@@ -1,6 +1,7 @@
 "use client";
+import BackButton from "@/components/BackButton";
 import { addCategory, setCategories } from "@/features/category/categorySlice";
-import { createCategory } from "@/libs/category";
+import { createCategory, editCategory } from "@/libs/category";
 import { createNotification } from "@/libs/notification";
 import ButtonSpinner from "@/subcomponents/Button Spinner/ButtonSpinner";
 import { Form, Input, Label, Texarea } from "@/subcomponents/Forms";
@@ -9,10 +10,11 @@ import { showError, showSuccess } from "@/utils/toaster";
 import { useFormik } from "formik";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import ToggleButton from "react-toggle-button";
 
-const CreateCategory = () => {
+const CreateCategory = ({ type, id }) => {
   // utils
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -22,12 +24,30 @@ const CreateCategory = () => {
   const currUser = useSelector((state) => state.currUser);
   const { userData } = currUser;
 
+  const categories = useSelector((state) => state.categories);
+  const { categoriesData } = categories;
+  const filteredCategory = categoriesData.filter((item) => item?._id === id)[0];
+  
   // create notification
   const handleNotification = async (category) => {
     await createNotification({
       type: "category create",
       created_by: userData?.name,
-      text: `created a category named "${category}"`,
+      text: `${
+        type === "edit"
+          ? "updated a category"
+          : `created a category named "${category}"`
+      }`,
+    });
+  };
+
+  // featured or not
+  const [featured, setFeatured] = useState(filteredCategory?.isFeatured);
+  const handleFeatured = () => {
+    setFeatured((prev) => {
+      const newValue = !prev;
+      formik.setFieldValue("isFeatured", newValue);
+      return newValue;
     });
   };
 
@@ -36,6 +56,7 @@ const CreateCategory = () => {
     initialValues: {
       categoryName: "",
       description: "",
+      isFeatured: featured,
       created_by: userData?.id,
     },
 
@@ -47,28 +68,51 @@ const CreateCategory = () => {
 
       try {
         setLoading(true);
-        const res = await createCategory(values);
+        const res =
+          type === "edit"
+            ? await editCategory(id, values)
+            : await createCategory(values);
 
         if (res.ok) {
-          showSuccess("Category Created");
+          showSuccess(
+            `${type === "edit" ? "Category Updated" : "Category Created"}`
+          );
           resetForm();
 
           router.push("/dashboard/all-categories");
           const categoryData = await res.json();
           handleNotification(categoryData?.data?.categoryName);
+
           // update store
-          dispatch(addCategory(categoryData.data));
+
+          if (type === "edit") {
+            return dispatch(
+              addCategory(categoryData.data._id, categoryData.data)
+            );
+          } else {
+            return dispatch(addCategory(categoryData.data));
+          }
         } else {
           showError("Failed to Create Category");
         }
       } catch (error) {
-        console.log("error", error)
+        console.log("error", error);
         showError("Internal Server Error");
       } finally {
         setLoading(false);
       }
     },
   });
+
+  useEffect(() => {
+    if (type === "edit") {
+      formik.setValues({
+        categoryName: filteredCategory?.categoryName,
+        description: filteredCategory?.description,
+        isFeatured: filteredCategory?.isFeatured,
+      });
+    }
+  }, [id]);
 
   return (
     <>
@@ -78,8 +122,12 @@ const CreateCategory = () => {
         transition={{ duration: 0.5, delay: 0.2 }}
         // className="grid grid-cols-12 gap-2 h-fit"
       >
+        <BackButton />
         {/* main form */}
-        <H5 text={"Create New Category"} className="text-lg font-bold" />
+        <H5
+          text={`${type == "edit" ? "Edit Category" : "Create New Category"} `}
+          className="text-lg font-bold"
+        />
 
         {/* profile update */}
         <Form onSubmit={formik.handleSubmit} className="mt-5">
@@ -106,6 +154,17 @@ const CreateCategory = () => {
                   value={formik.values.description}
                 />
               </div>
+
+              <div className="w-full col-span-12">
+                <Label text={"Featured?"} />
+                <ToggleButton value={featured} onToggle={handleFeatured} />
+              </div>
+
+              <p className="w-full col-span-12">
+                {featured
+                  ? "This will be show on homepage categories list"
+                  : "This will not be show on homepage categories list"}
+              </p>
             </div>
 
             {/* sidebar items */}

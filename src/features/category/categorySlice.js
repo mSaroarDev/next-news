@@ -35,6 +35,18 @@ const categories = createSlice({
     addCategory: (state, action) => {
       state.categoriesData = [...state.categoriesData, action.payload];
     },
+
+    editCategory: (state, action) => {
+      const filteredCategory = state.categoriesData.filter(
+        (item) => item?._id === action.payload.id
+      );
+
+      state.categoriesData = state.categoriesData.map((item) =>
+        item._id === action.payload.id
+          ? { ...item, ...action.payload.data }
+          : item
+      );
+    },
   },
 });
 

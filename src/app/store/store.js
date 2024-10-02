@@ -11,6 +11,8 @@ import postsReducer from "@/features/posts/postsFeatures";
 
 const rootReducer = (state, action) => {
   if (action.type === "RESET") {
+    const { posts, categories } = state;
+
     // Purge the persisted state
     storage.removeItem("persist:root"); // Adjust the key if different
     return combineReducers({
@@ -19,7 +21,13 @@ const rootReducer = (state, action) => {
       notifications: notificationsReducer,
       categories: categoriesReducer,
       posts: postsReducer,
-    })(undefined, action); // Pass undefined to reset to initial state
+    })(
+      {
+        posts, // Restore the posts state
+        categories, // Restore the categories state
+      },
+      action
+    ); // Pass undefined to reset to initial state
   }
 
   return combineReducers({

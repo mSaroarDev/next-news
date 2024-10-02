@@ -11,6 +11,10 @@ const categorySchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    isFeatured: {
+      type: Boolean,
+      required: true,
+    },
     created_by: {
       type: mongoose.Types.ObjectId,
       ref: "User",
