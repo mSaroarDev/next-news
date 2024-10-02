@@ -1,3 +1,4 @@
+import { connectDB } from "@/db/connectDB";
 import notificationModel from "@/db/models/notifications";
 import { NextResponse } from "next/server";
 
@@ -6,6 +7,8 @@ export async function POST(req, res) {
   const { type, created_by, notification_on, text } = formData;
 
   try {
+    await connectDB();
+
     const newData = new notificationModel({
       type,
       created_by,
