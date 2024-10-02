@@ -22,6 +22,5 @@ export const getNotification = async () => {
     }
   );
 
-  const data = await res.json();
-  return data;
+  return res;
 };

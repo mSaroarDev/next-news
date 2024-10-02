@@ -6,7 +6,7 @@ export const fetchCategories = createAsyncThunk("fetchCategories", async () => {
   const res = await getAllCategory();
   const data = await res.json();
   return data.data;
-});
+}); 
 
 let initialState = {
   isLoading: false,

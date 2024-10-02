@@ -4,8 +4,7 @@ import { Search } from "lucide-react";
 import { motion } from "framer-motion";
 import NotificationCard from "@/components/NotificationCard";
 import { useDispatch, useSelector } from "react-redux";
-import { setNotifications } from "@/features/notifications/notificationSlice";
-import { getNotification } from "@/libs/notification";
+import { fetchNotifications } from "@/features/notifications/notificationSlice";
 import { useEffect } from "react";
 
 const AllNotifications = () => {
@@ -14,16 +13,8 @@ const AllNotifications = () => {
   const notificationsState = useSelector((state) => state.notifications);
   const { notificationData } = notificationsState;
 
-  // fetch notifications
-  const getAllNotification = async () => {
-    const res = await getNotification();
-    if (res.msg === "success") {
-      dispatch(setNotifications(res.data));
-    }
-  };
-
   useEffect(() => {
-    getAllNotification();
+    dispatch(fetchNotifications())
   }, []);
 
   return (
