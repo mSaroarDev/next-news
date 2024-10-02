@@ -6,7 +6,7 @@ export const fetchCategories = createAsyncThunk("fetchCategories", async () => {
   const res = await getAllCategory();
   const data = await res.json();
   return data.data;
-}); 
+});
 
 let initialState = {
   isLoading: false,
@@ -33,23 +33,9 @@ const categories = createSlice({
 
   reducers: {
     addCategory: (state, action) => {
-      state.categoriesData.push(action.payload);
+      state.categoriesData = [...state.categoriesData, action.payload];
     },
   },
-
-  // reducers: {
-  //   setCategories: (state, action) => {
-  //     if (Array.isArray(action.payload) && action.payload.length > 0) {
-  //       // Append the new categories to the existing categoriesData
-  //       state.categoriesData = [...state.categoriesData, ...action.payload];
-  //     } else if (
-  //       typeof action.payload === "object" &&
-  //       action.payload !== null
-  //     ) {
-  //       // If a single category object is passed, append it
-  //       state.categoriesData = [...state.categoriesData, action.payload];
-  //     }
-  //   },
 });
 
 export const { setCategories, addCategory } = categories.actions;
