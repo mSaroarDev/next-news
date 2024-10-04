@@ -1,8 +1,25 @@
 "use client";
+import { fetchPublicCategories } from "@/features/publicCategory/publicCategorySlice";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-const Categories = ({ featuredCategories }) => {
+const Categories = () => {
+  // redux store
+  const dispatch = useDispatch();
+
+  const { publicCategoriesData } = useSelector(
+    (state) => state.publicCategories
+  );
+  const featuredCategories = publicCategoriesData?.filter(
+    (category) => category?.isFeatured === true
+  );
+
+  useEffect(() => {
+    dispatch(fetchPublicCategories());
+  }, []);
+
   return (
     <>
       <motion.div
