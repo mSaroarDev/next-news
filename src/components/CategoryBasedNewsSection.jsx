@@ -4,6 +4,7 @@ import CategoryNewsPost from "./CategoryNewsPost";
 import FeaturedPostSmall from "./FeaturedPostSmall";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { useSelector } from "react-redux";
 
 const CategoryBasedNewsSection = () => {
   const { ref: categoryBasedNews, inView } = useInView({
@@ -11,6 +12,12 @@ const CategoryBasedNewsSection = () => {
     threshold: 0.1, // Trigger when 10% of the element is visible
   });
 
+  // redux store
+  const { publicPostsData } = useSelector((state) => state.publicPosts);
+  
+  const bangladeshPosts = publicPostsData?.filter((post)=> post.category?.categoryName === "Bangladesh")
+  const internationalPosts = publicPostsData?.filter((post)=> post.category?.categoryName === "International")
+  
   return (
     <>
       {/* category based news */}
@@ -27,12 +34,9 @@ const CategoryBasedNewsSection = () => {
           <CommonTitle text="Bangladesh" />
 
           <div className="py-5 w-full flex flex-col gap-4 items-start justify-between">
-            <CategoryNewsPost />
+            <CategoryNewsPost data={bangladeshPosts[0]} />
 
-            <FeaturedPostSmall />
-            <FeaturedPostSmall />
-            <FeaturedPostSmall />
-            <FeaturedPostSmall />
+            {bangladeshPosts && bangladeshPosts.slice(1, 5).map((post)=> <FeaturedPostSmall key={post?._id} data={post} />)}
           </div>
         </div>
 
@@ -41,12 +45,8 @@ const CategoryBasedNewsSection = () => {
           <CommonTitle text="International" />
 
           <div className="py-5 w-full flex flex-col gap-4 items-start justify-between">
-            <CategoryNewsPost />
-
-            <FeaturedPostSmall />
-            <FeaturedPostSmall />
-            <FeaturedPostSmall />
-            <FeaturedPostSmall />
+            <CategoryNewsPost data={internationalPosts[0]} />
+            {internationalPosts && internationalPosts.slice(1, 5).map((post)=> <FeaturedPostSmall key={post?._id} data={post} />)}
           </div>
         </div>
       </motion.main>

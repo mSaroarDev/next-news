@@ -1,20 +1,8 @@
 "use client";
-import { fetchCategories } from "@/features/category/categorySlice";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
 
-const Categories = () => {
-  // redux store
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const categories = useSelector((state) => state.categories);
-  const {categoriesData} = categories;
-  const featuredCategories = categoriesData?.filter((category) => category?.isFeatured === true)
-
+const Categories = ({ featuredCategories }) => {
   return (
     <>
       <motion.div
@@ -24,6 +12,12 @@ const Categories = () => {
         className="hidden lg:block border-y border-gray/30 mt-14"
       >
         <main className="text-center">
+          <Link
+            href={`/`}
+            className="capitalize py-2.5 px-4 inline-block font-bold hover:bg-brand/10 transition-all duration-200"
+          >
+            Latest News
+          </Link>
           {featuredCategories &&
             featuredCategories?.map((item, i) => (
               <Link

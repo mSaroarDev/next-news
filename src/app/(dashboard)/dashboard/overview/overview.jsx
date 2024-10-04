@@ -1,10 +1,17 @@
 "use client";
 import LastPost from "@/components/Lastpost";
 import OverviewCard from "@/components/OverviewCard";
+import { fetchCategories } from "@/features/category/categorySlice";
 import { motion } from "framer-motion";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const Overview = () => {
+  // call functions
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, []);
 
   return (
     <>
@@ -26,8 +33,6 @@ const Overview = () => {
           </div>
         </div>
       </motion.div>
-
-      
     </>
   );
 };

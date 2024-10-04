@@ -50,16 +50,14 @@ const NotificationCard = ({ data }) => {
             <div>
               <p className="text-black">
                 <span className="capitalize font-semibold">{created_by || "a user"}</span> {" "}
-                {`${text}
-                  ${notification_on ? notification_on : ""}
-                `}
+                {`${text}`}
               </p>
 
               <div className="mt-3 flex flex-col md:flex-row gap-1 md:gap-2">
                 <p className="text-sm text-gray">on: {convertDateToCustomFormat(createdAt)}</p>
 
                 {notification_on && (
-                  <Link href="/" className="text-sm text-black underline">
+                  <Link href={notification_on} target="_blank" className="text-sm text-black underline">
                     view Post
                   </Link>
                 )}

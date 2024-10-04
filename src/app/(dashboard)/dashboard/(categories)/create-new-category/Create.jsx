@@ -27,7 +27,7 @@ const CreateCategory = ({ type, id }) => {
   const categories = useSelector((state) => state.categories);
   const { categoriesData } = categories;
   const filteredCategory = categoriesData.filter((item) => item?._id === id)[0];
-  
+
   // create notification
   const handleNotification = async (category) => {
     await createNotification({
@@ -42,7 +42,9 @@ const CreateCategory = ({ type, id }) => {
   };
 
   // featured or not
-  const [featured, setFeatured] = useState(filteredCategory?.isFeatured);
+  const [featured, setFeatured] = useState(
+    type === "edit" ? filteredCategory?.isFeatured : false
+  );
   const handleFeatured = () => {
     setFeatured((prev) => {
       const newValue = !prev;

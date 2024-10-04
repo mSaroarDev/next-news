@@ -6,7 +6,7 @@ export async function GET(req, res) {
   try {
     await connectDB();
 
-    const data = await categoryModel.find().sort({ _id: -1 });
+    const data = await categoryModel.find();
     return NextResponse.json({ msg: "success", data });
   } catch (error) {
     console.log("error in api/category/create", error);

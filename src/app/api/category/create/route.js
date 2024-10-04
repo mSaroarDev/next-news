@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req, res) {
   const formData = await req.json();
+  console.log("formData", formData);
 
   try {
     await connectDB();

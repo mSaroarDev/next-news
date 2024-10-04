@@ -28,6 +28,10 @@ const postsSchema = new mongoose.Schema(
     seo: {
       type: String,
     },
+    isFeatured: {
+      type: Boolean,
+      required: true,
+    },
     status: {
       type: String,
       enum: ["Active", "Pending", "Hidden", "Archived"],

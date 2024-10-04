@@ -21,8 +21,8 @@ const SportsAndEntertainmentSection = () => {
         id={sportsAndEntertainment}
         className="grid grid-cols-12 gap-5 py-14"
       >
-        <BreakingNews />
-        <FeaturedPost />
+        <BreakingNews category="Sports" heading="Sports" />
+        <FeaturedPost category="Entertainment" heading="Entertainment" />
       </motion.main>
     </>
   );

@@ -16,6 +16,7 @@ import { addPost, deletePost, editPost } from "@/features/posts/postsSlice";
 import ButtonSpinner from "@/subcomponents/Button Spinner/ButtonSpinner";
 import BackButton from "@/components/BackButton";
 import Swal from "sweetalert2";
+import ToggleButton from "react-toggle-button";
 
 const CreatePost = ({ type, id }) => {
   // utils
@@ -55,11 +56,12 @@ const CreatePost = ({ type, id }) => {
   };
 
   // create notification
-  const handleNotification = async (post, actionType, msg) => {
+  const handleNotification = async (post, actionType, msg, notification_on) => {
     await createNotification({
       type: actionType,
       created_by: userData?.name,
       text: msg + ` ` + `"${post}"`,
+      notification_on
     });
   };
 
@@ -78,6 +80,16 @@ const CreatePost = ({ type, id }) => {
     }
   };
 
+  // featured or not
+  const [featured, setFeatured] = useState(type === 'edit' ? thisPost?.isFeatured : false);
+  const handleFeatured = () => {
+    setFeatured((prev) => {
+      const newValue = !prev;
+      formik.setFieldValue("isFeatured", newValue);
+      return newValue;
+    });
+  };
+
   // formik
   const formik = useFormik({
     initialValues: {
@@ -86,6 +98,7 @@ const CreatePost = ({ type, id }) => {
       category: "",
       image: "",
       tags: tags,
+      isFeatured: featured,
       created_by: userData?.id,
     },
     onSubmit: async (values, { resetForm }) => {
@@ -110,7 +123,8 @@ const CreatePost = ({ type, id }) => {
           handleNotification(
             data?.data?.title,
             type === "edit" ? "post edit" : "post create",
-            type === "edit" ? "updated the post " : "Posted "
+            type === "edit" ? "updated the post " : "Posted ",
+            `/article/${data?.data?._id}?title=${data?.data?.title}&content=${data?.data?.seo}`
           );
 
           // update store
@@ -179,6 +193,7 @@ const CreatePost = ({ type, id }) => {
         category: thisPost?.category?._id,
         image: thisPost?.image,
         tags: tags,
+        isFeatured: thisPost?.isFeatured,
       });
       setImage(thisPost?.image);
       setTags(thisPost?.tags);
@@ -225,6 +240,11 @@ const CreatePost = ({ type, id }) => {
                   value={formik.values.description}
                   placeholder="Post Content"
                 />
+              </div>
+
+              <div className="w-full col-span-12">
+                <Label text={"Featured?"} />
+                <ToggleButton value={featured} onToggle={handleFeatured} />
               </div>
             </div>
 
