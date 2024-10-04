@@ -9,10 +9,11 @@ import categoriesReducer from "@/features/category/categorySlice";
 import postsReducer from "@/features/posts/postsSlice";
 import publicCategoriesReducer from "@/features/publicCategory/publicCategorySlice";
 import publicPostsReducer from "@/features/publicPosts/publicPostsSlice";
+import publicCommentsReducer from "@/features/publicComments/publicCommentsSlice";
 
 const rootReducer = (state, action) => {
   if (action.type === "RESET") {
-    const { publicCategories, publicPosts } = state;
+    const { publicCategories, publicPosts, publicComments } = state;
 
     // Purge the persisted state
     storage.removeItem("persist:root"); // Adjust the key if different
@@ -24,10 +25,12 @@ const rootReducer = (state, action) => {
       posts: postsReducer,
       publicCategories: publicCategoriesReducer,
       publicPosts: publicPostsReducer,
+      publicComments: publicCommentsReducer,
     })(
       {
         publicPosts, // keep the posts state
         publicCategories, // keep the categories state
+        publicComments, // keep the categories state
       },
       action
     ); // Pass undefined to reset to initial state
@@ -41,6 +44,7 @@ const rootReducer = (state, action) => {
     posts: postsReducer,
     publicCategories: publicCategoriesReducer,
     publicPosts: publicPostsReducer,
+    publicComments: publicCommentsReducer,
   })(state, action);
 };
 

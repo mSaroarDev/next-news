@@ -32,6 +32,12 @@ const postsSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
     },
+    comments: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
     status: {
       type: String,
       enum: ["Active", "Pending", "Hidden", "Archived"],

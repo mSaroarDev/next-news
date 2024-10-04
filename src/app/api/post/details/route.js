@@ -1,6 +1,8 @@
 import { connectDB } from "@/db/connectDB";
 import postsModel from "@/db/models/posts";
 import { NextResponse } from "next/server";
+import categoryModel from "@/db/models/category";
+import commentsModel from "@/db/models/comments";
 
 export async function GET(req, res) {
   //   get the id
@@ -10,7 +12,9 @@ export async function GET(req, res) {
   try {
     await connectDB();
 
-    const data = await postsModel.findOne({ _id: id }).populate("category");
+    const data = await postsModel
+      .findOne({ _id: id })
+      .populate([{ path: "category" }, { path: "comments" }]);
 
     return NextResponse.json({ msg: "success", data });
   } catch (error) {

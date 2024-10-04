@@ -10,10 +10,17 @@ import Link from "next/link";
 import { ChevronsRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { convertDateToCustomFormat } from "@/utils/convertDate";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useFormik } from "formik";
+import { useEffect, useState } from "react";
+import { createComment } from "@/libs/comment";
+import { showError, showSuccess } from "@/utils/toaster";
+import { addComment, fetchPublicComments } from "@/features/publicComments/publicCommentsSlice";
 
 const ArtcleDetailsPage = ({ data }) => {
   // redux
+  const dispatch = useDispatch();
+  const { userData } = useSelector((state) => state.currUser);
   const { publicCategoriesData } = useSelector(
     (state) => state.publicCategories
   );
@@ -21,6 +28,51 @@ const ArtcleDetailsPage = ({ data }) => {
   const relatedData = publicPostsData?.filter(
     (post) => post?.category?.categoryName === data?.category?.categoryName
   );
+
+  // this post comments
+  const {publicCommentsData} = useSelector((state) => state.publicComments);
+  const thisPostComments = publicCommentsData?.filter((comment)=> comment?.post === data?._id);
+  
+  useEffect(() => {
+    dispatch(fetchPublicComments());
+  }, [data?.id]);
+
+  // utils
+  const [loading, setLoading] = useState(false);
+
+  // formik
+  const formik = useFormik({
+    initialValues: {
+      user: "",
+      comment: "",
+      post: data?._id,
+    },
+    onSubmit: async (values, {resetForm}) => {
+      try {
+        setLoading(true);
+        const res = await createComment(values);
+
+        setLoading(false);
+        if (res.ok) {
+          showSuccess("Comment added");
+          resetForm();
+
+          // dispatch new comment to state
+          const response = await res.json();
+          dispatch(addComment({
+            id: data?._id,
+            data: response?.data
+          }))
+        } else {
+          showError("Comment Failed");
+        }
+      } catch (error) {
+        showError("Internal Server Error");
+      } finally {
+        setLoading(false);
+      }
+    },
+  });
 
   return (
     <>
@@ -75,9 +127,20 @@ const ArtcleDetailsPage = ({ data }) => {
             <CommonTitle text="Comments" />
             <div className="mt-5">
               {/* comment box */}
-              <Form>
-                <Input placeholder="Enter Your Name" />
-                <Texarea />
+              <Form onSubmit={formik.handleSubmit}>
+                <Input
+                  id="user"
+                  name="user"
+                  value={formik.values.user}
+                  onChange={formik.handleChange}
+                  placeholder="Enter Your Name"
+                />
+                <Texarea
+                  id="comment"
+                  name="comment"
+                  value={formik.values.comment}
+                  onChange={formik.handleChange}
+                />
                 <button
                   type="submit"
                   className="bg-black rounded px-5 py-2 text-white hover:text-black hover:bg-black/10 transition-all duration-200"
@@ -88,12 +151,10 @@ const ArtcleDetailsPage = ({ data }) => {
 
               {/* recent comments */}
               <div className="flex flex-col gap-2 mt-5">
-                <Comments />
-                <Comments />
-                <Comments />
-                <Comments />
-                <Comments />
-                <Comments />
+                {thisPostComments &&
+                  thisPostComments?.map((item) => (
+                    <Comments key={item?._id} data={item} />
+                  ))}
               </div>
             </div>
           </div>
