@@ -10,11 +10,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import { CldUploadButton } from "next-cloudinary";
 import { showError, showSuccess } from "@/utils/toaster";
-import { editCategory } from "@/libs/category";
-import { createPosts, editPosts } from "@/libs/post";
+import { createPosts, deletePosts, editPosts } from "@/libs/post";
 import { createNotification } from "@/libs/notification";
-import { addPost, editPost } from "@/features/posts/postsSlice";
+import { addPost, deletePost, editPost } from "@/features/posts/postsSlice";
 import ButtonSpinner from "@/subcomponents/Button Spinner/ButtonSpinner";
+import BackButton from "@/components/BackButton";
+import Swal from "sweetalert2";
 
 const CreatePost = ({ type, id }) => {
   // utils
@@ -54,15 +55,11 @@ const CreatePost = ({ type, id }) => {
   };
 
   // create notification
-  const handleNotification = async (post) => {
+  const handleNotification = async (post, actionType, msg) => {
     await createNotification({
-      type: "post create",
+      type: actionType,
       created_by: userData?.name,
-      text: `${
-        type === "edit"
-          ? `updated a post "${post}"`
-          : `created a post "${post}"`
-      }`,
+      text: msg + ` ` + `"${post}"`,
     });
   };
 
@@ -110,7 +107,11 @@ const CreatePost = ({ type, id }) => {
 
           router.push("/dashboard/all-posts");
           const data = await res.json();
-          handleNotification(data?.data?.title);
+          handleNotification(
+            data?.data?.title,
+            type === "edit" ? "post edit" : "post create",
+            type === "edit" ? "updated the post " : "Posted "
+          );
 
           // update store
           if (type === "edit") {
@@ -130,17 +131,58 @@ const CreatePost = ({ type, id }) => {
     },
   });
 
+  // delete post
+  const handleDeletePost = async () => {
+    Swal.fire({
+      title: "Do you want to Delete this post?",
+      icon: "question",
+      showDenyButton: true,
+      confirmButtonText: "Yes! Delete",
+      denyButtonText: `No`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          setLoading(true);
+          const res = await deletePosts(id);
+          if (res.ok) {
+            setLoading(false);
+            // update the state
+            dispatch(deletePost(id));
+            router.push("/dashboard/all-posts");
+            showSuccess("Post deleted");
+
+            // create notification
+            const data = await res.json();
+            handleNotification(
+              data?.data?.title,
+              "post delete",
+              "deleted a post"
+            );
+          } else {
+            showError("You are not eligible to perform this action");
+          }
+        } catch (error) {
+          showError("Internal Server Error");
+        } finally {
+          setLoading(false);
+        }
+      }
+    });
+  };
+
   // set data if type is edit
   useEffect(() => {
-    formik.setValues({
-      title: thisPost?.title,
-      description: thisPost?.description,
-      category: thisPost?.category?._id,
-      image: thisPost?.image,
-      tags: tags,
-    });
-    setImage(thisPost?.image);
-    setTags(thisPost?.tags);
+    if (type === "edit") {
+      formik.setValues({
+        title: thisPost?.title,
+        description: thisPost?.description,
+        category: thisPost?.category?._id,
+        image: thisPost?.image,
+        tags: tags,
+      });
+      setImage(thisPost?.image);
+      setTags(thisPost?.tags);
+    }
   }, [id]);
 
   return (
@@ -151,6 +193,7 @@ const CreatePost = ({ type, id }) => {
         transition={{ duration: 0.5, delay: 0.2 }}
         // className="grid grid-cols-12 gap-2 h-fit"
       >
+        {type === "edit" && <BackButton />}
         {/* main form */}
         <H5
           text={type === "edit" ? "Edit Post" : "Create New Post"}
@@ -314,9 +357,24 @@ const CreatePost = ({ type, id }) => {
                     className="text-base font-bold border-b border-brand/20 pb-2"
                   />
                   <div className="py-2">
-                    <button className="bg-red-600 text-white rounded-md px-4 py-2 w-full hover:bg-red-600/20 hover:text-red-600 transition-all duration-200">
-                      Delete Post
-                    </button>
+                    {loading ? (
+                      <button
+                        type="button"
+                        onClick={handleDeletePost}
+                        className="bg-red-600 text-white rounded-md px-4 py-2 w-full hover:bg-red-600/20 hover:text-red-600 transition-all duration-200 flex items-center justify-center gap-3"
+                      >
+                        <ButtonSpinner />
+                        <span>Deleting ...</span>
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleDeletePost}
+                        className="bg-red-600 text-white rounded-md px-4 py-2 w-full hover:bg-red-600/20 hover:text-red-600 transition-all duration-200"
+                      >
+                        Delete Post
+                      </button>
+                    )}
                   </div>
                 </div>
               )}

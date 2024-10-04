@@ -9,14 +9,13 @@ import { fetchPosts } from "@/features/posts/postsSlice";
 
 const AllPosts = () => {
   // redux state
-  const posts = useSelector((state) => state.posts);
-  const dispatch = useDispatch()
-  const { postsData } = posts;
+  const { postsData } = useSelector((state) => state.posts);
+  const { userData } = useSelector((state) => state.currUser);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchPosts());
   }, []);
-  
 
   return (
     <>
@@ -44,7 +43,7 @@ const AllPosts = () => {
         {/* main contents */}
         <div className="mt-5">
           {postsData &&
-            postsData?.map((item) => <PostRow key={item?._id} data={item} />)}
+            postsData?.map((item) => <PostRow key={item?._id} data={item} userData={userData} />)}
         </div>
       </motion.section>
     </>

@@ -38,3 +38,15 @@ export const editPosts = async (id, values) => {
 
   return res;
 };
+
+// edit posts
+export const deletePosts = async (id) => {
+  const res = await fetch(
+    process.env.NEXT_PUBLIC_BASE_URL + "/api/post/delete?id=" + id,
+    {
+      method: "DELETE",
+    }
+  );
+
+  return res;
+};

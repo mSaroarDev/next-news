@@ -6,7 +6,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 export const fetchPosts = createAsyncThunk("fetchPosts", async () => {
   const res = await getAllPosts();
   const data = await res.json();
-  console.log("data", data);
   return data.data;
 });
 
@@ -45,8 +44,15 @@ const posts = createSlice({
           : item
       );
     },
+
+    deletePost: (state, action) => {
+      const remainingPosts = state.postsData.filter(
+        (post) => post._id !== action.payload
+      );
+      state.postsData = remainingPosts;
+    },
   },
 });
 
-export const { addPost, editPost } = posts.actions;
+export const { addPost, editPost, deletePost } = posts.actions;
 export default posts.reducer;

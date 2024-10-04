@@ -1,7 +1,10 @@
 import { H6, P } from "@/subcomponents/Headings";
 import { convertDateToCustomFormat } from "@/utils/convertDate";
 import {
+  BookmarkX,
   CalendarPlus,
+  ClipboardPen,
+  FilePlus,
   LogIn,
   MessagesSquare,
   Share2,
@@ -16,17 +19,23 @@ const NotificationCard = ({ data }) => {
   // generate icon
   const generateIcon = () => {
     if (type === "loggin") {
-      return <UserRoundCheck className="w-4 h-4 text-green-600" />;
+      return <UserRoundCheck className="w-6 h-6 text-green-600" />;
     } else if (type === "comment") {
-      return <MessagesSquare className="w-4 h-4" />;
+      return <MessagesSquare className="w-6 h-6" />;
     } else if (type === "like") {
-      return <ThumbsUp className="w-4 h-4" />;
+      return <ThumbsUp className="w-6 h-6" />;
     } else if (type === "unlike") {
-      return <ThumbsDown className="w-4 h-4" />;
+      return <ThumbsDown className="w-6 h-6" />;
     } else if (type === "share") {
-      return <Share2 className="w-4 h-4" />;
+      return <Share2 className="w-6 h-6" />;
     }else if (type === "category create") {
-      return <CalendarPlus className="w-4 h-4 text-purple-600" />;
+      return <CalendarPlus className="w-6 h-6 text-purple-600" />;
+    } else if (type === "post create") {
+      return <FilePlus className="w-6 h-6 text-purple-600" />;
+    } else if (type === "post delete") {
+      return <BookmarkX className="w-6 h-6 text-red-600" />;
+    } else if (type === "post edit") {
+      return <ClipboardPen className="w-6 h-6 text-purple-600" />;
     }
   };
 

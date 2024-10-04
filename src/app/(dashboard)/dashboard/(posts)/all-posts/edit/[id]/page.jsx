@@ -1,3 +1,4 @@
+import BackButton from "@/components/BackButton";
 import CreatePost from "../../../create-new-post/CreatePost";
 
 const page = ({ params }) => {
