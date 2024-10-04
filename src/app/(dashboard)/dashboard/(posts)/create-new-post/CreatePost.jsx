@@ -129,9 +129,9 @@ const CreatePost = ({ type, id }) => {
 
           // update store
           if (type === "edit") {
-            return dispatch(editPost(data.data._id, data.data));
+            dispatch(editPost(data.data._id, data.data));
           } else {
-            return dispatch(addPost(data.data));
+            dispatch(addPost(data.data));
           }
         } else {
           showError("Failed");
