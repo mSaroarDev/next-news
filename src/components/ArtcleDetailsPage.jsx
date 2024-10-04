@@ -15,7 +15,10 @@ import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { createComment } from "@/libs/comment";
 import { showError, showSuccess } from "@/utils/toaster";
-import { addComment, fetchPublicComments } from "@/features/publicComments/publicCommentsSlice";
+import {
+  addComment,
+  fetchPublicComments,
+} from "@/features/publicComments/publicCommentsSlice";
 
 const ArtcleDetailsPage = ({ data }) => {
   // redux
@@ -30,9 +33,11 @@ const ArtcleDetailsPage = ({ data }) => {
   );
 
   // this post comments
-  const {publicCommentsData} = useSelector((state) => state.publicComments);
-  const thisPostComments = publicCommentsData?.filter((comment)=> comment?.post === data?._id);
-  
+  const { publicCommentsData } = useSelector((state) => state.publicComments);
+  const thisPostComments = publicCommentsData?.filter(
+    (comment) => comment?.post === data?._id
+  );
+
   useEffect(() => {
     dispatch(fetchPublicComments());
   }, [data?.id]);
@@ -47,7 +52,7 @@ const ArtcleDetailsPage = ({ data }) => {
       comment: "",
       post: data?._id,
     },
-    onSubmit: async (values, {resetForm}) => {
+    onSubmit: async (values, { resetForm }) => {
       try {
         setLoading(true);
         const res = await createComment(values);
@@ -59,10 +64,12 @@ const ArtcleDetailsPage = ({ data }) => {
 
           // dispatch new comment to state
           const response = await res.json();
-          dispatch(addComment({
-            id: data?._id,
-            data: response?.data
-          }))
+          dispatch(
+            addComment({
+              id: data?._id,
+              data: response?.data,
+            })
+          );
         } else {
           showError("Comment Failed");
         }
@@ -181,6 +188,7 @@ const ArtcleDetailsPage = ({ data }) => {
             {publicCategoriesData &&
               publicCategoriesData?.map((item) => (
                 <Link
+                  key={item?._id}
                   href={`/categories/${item?._id}?category=${item.categoryName}`}
                   className="categori-list"
                 >
