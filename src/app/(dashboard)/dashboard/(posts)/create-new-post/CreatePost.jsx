@@ -61,7 +61,7 @@ const CreatePost = ({ type, id }) => {
       type: actionType,
       created_by: userData?.name,
       text: msg + ` ` + `"${post}"`,
-      notification_on
+      notification_on,
     });
   };
 
@@ -81,7 +81,9 @@ const CreatePost = ({ type, id }) => {
   };
 
   // featured or not
-  const [featured, setFeatured] = useState(type === 'edit' ? thisPost?.isFeatured : false);
+  const [featured, setFeatured] = useState(
+    type === "edit" ? thisPost?.isFeatured : false
+  );
   const handleFeatured = () => {
     setFeatured((prev) => {
       const newValue = !prev;
@@ -129,9 +131,9 @@ const CreatePost = ({ type, id }) => {
 
           // update store
           if (type === "edit") {
-            dispatch(editPost(data.data._id, data.data));
+            return dispatch(editPost(data.data._id, data.data));
           } else {
-            dispatch(addPost(data.data));
+            return dispatch(addPost(data.data));
           }
         } else {
           showError("Failed");
