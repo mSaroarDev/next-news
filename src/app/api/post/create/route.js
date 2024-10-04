@@ -12,13 +12,13 @@ export async function POST(req, res) {
 
     const newData = new postsModel({
       ...formData,
-      seo: `${formData.title} ${formData.description} ${toString}`,
+      seo: `${formData.title} ${toString}`,
     });
     const data = await newData.save();
 
-    return NextResponse.json({ msg: "success", data });
+    return NextResponse.json({ msg: "success", data }, { status: 200 });
   } catch (error) {
     console.log("error in api/posts/create", error);
-    return NextResponse.json({ msg: "error", error });
+    return NextResponse.json({ msg: "error", error }, { status: 500 });
   }
 }
