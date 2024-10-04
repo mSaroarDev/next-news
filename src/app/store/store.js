@@ -1,4 +1,3 @@
-// store.js
 "use client";
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
@@ -7,7 +6,7 @@ import loginReducer from "@/features/user/loginSlice";
 import currUserReducer from "@/features/user/currUserSlice";
 import notificationsReducer from "@/features/notifications/notificationSlice";
 import categoriesReducer from "@/features/category/categorySlice";
-import postsReducer from "@/features/posts/postsFeatures";
+import postsReducer from "@/features/posts/postsSlice";
 
 const rootReducer = (state, action) => {
   if (action.type === "RESET") {
@@ -23,8 +22,8 @@ const rootReducer = (state, action) => {
       posts: postsReducer,
     })(
       {
-        posts, // Restore the posts state
-        categories, // Restore the categories state
+        posts, // keep the posts state
+        categories, // keep the categories state
       },
       action
     ); // Pass undefined to reset to initial state

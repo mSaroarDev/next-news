@@ -1,25 +1,29 @@
 import { H5 } from "@/subcomponents/Headings";
 import Link from "next/link";
 
-const PostRow = () => {
+const PostRow = ({ data }) => {
   return (
     <>
-      <Link href="/" className="h-auto mb-2 box-shadow flex flex-col md:flex-row">
-        <div className="w-full md:w-44 h-auto flex-shrink-0">
+      <Link
+        href="/"
+        className="h-auto lg:h-[130px] w-full mb-2 box-shadow flex flex-col md:flex-row"
+      >
+        <div className="w-full h-[200px] md:h-full md:w-44">
           <img
-            src="https://diony.co.uk/wp-content/themes/diony/assets/images/placeholder-news.jpeg"
+            src={
+              data?.image ||
+              "https://diony.co.uk/wp-content/themes/diony/assets/images/placeholder-news.jpeg"
+            }
             className="w-full h-full object-cover"
-            alt="Title"
-            style={{ height: "100%" }}
+            alt={data?.title}
           />
         </div>
 
         <div className="flex-grow px-4 py-2 flex flex-col justify-between">
-          <H5
-            className="text-base font-bold mb-2"
-            text="Lipsum generator: Lorem Ipsum - All the facts"
-          />
-          <p className="text-sm text-gray">in category: Bangladesh</p>
+          <H5 className="text-base font-bold mb-2" text={data?.title} />
+          <p className="text-sm text-gray">
+            in category: {data?.category?.categoryName}{" "}
+          </p>
           <p className="text-sm text-gray">
             posted on: 24 Jun, 2024 - 08.00 PM
           </p>

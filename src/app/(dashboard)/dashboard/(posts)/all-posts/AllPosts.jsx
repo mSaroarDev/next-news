@@ -3,8 +3,21 @@ import PostRow from "@/components/PostRow";
 import { H5 } from "@/subcomponents/Headings";
 import { Search } from "lucide-react";
 import { motion } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { fetchPosts } from "@/features/posts/postsSlice";
 
 const AllPosts = () => {
+  // redux state
+  const posts = useSelector((state) => state.posts);
+  const dispatch = useDispatch()
+  const { postsData } = posts;
+
+  useEffect(() => {
+    dispatch(fetchPosts());
+  }, []);
+  
+
   return (
     <>
       <motion.section
@@ -30,13 +43,8 @@ const AllPosts = () => {
 
         {/* main contents */}
         <div className="mt-5">
-          <PostRow />
-          <PostRow />
-          <PostRow />
-          <PostRow />
-          <PostRow />
-          <PostRow />
-          <PostRow />
+          {postsData &&
+            postsData?.map((item) => <PostRow key={item?._id} data={item} />)}
         </div>
       </motion.section>
     </>

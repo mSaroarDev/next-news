@@ -9,9 +9,14 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import { CldUploadButton } from "next-cloudinary";
-import { showError } from "@/utils/toaster";
+import { showError, showSuccess } from "@/utils/toaster";
+import { editCategory } from "@/libs/category";
+import { createPosts } from "@/libs/post";
+import { createNotification } from "@/libs/notification";
+import { addPost } from "@/features/posts/postsSlice";
+import ButtonSpinner from "@/subcomponents/Button Spinner/ButtonSpinner";
 
-const CreatePost = () => {
+const CreatePost = ({ type }) => {
   // utils
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -29,8 +34,8 @@ const CreatePost = () => {
   const [tags, setTags] = useState([]);
   const handleAddTags = (e) => {
     e.preventDefault();
-    if(inputTag == ""){
-      return showError("Please input related keywords")
+    if (inputTag == "") {
+      return showError("Please input related keywords");
     }
 
     const updatedTags = [...tags, inputTag];
@@ -44,6 +49,17 @@ const CreatePost = () => {
     const remainingTags = tags.filter((_, i) => i !== index); // Use the index to filter the correct tag
     setTags(remainingTags);
     formik.setFieldValue("tags", remainingTags);
+  };
+
+  // create notification
+  const handleNotification = async (post) => {
+    await createNotification({
+      type: "post create",
+      created_by: userData?.name,
+      text: `${
+        type === "edit" ? "updated a post" : `created a post "${post}"`
+      }`,
+    });
   };
 
   // cloudinary image
@@ -71,8 +87,42 @@ const CreatePost = () => {
       tags: tags,
       created_by: userData?.id,
     },
-    onSubmit: async (values) => {
-      console.log("values", values);
+    onSubmit: async (values, { resetForm }) => {
+      const { title, description, category, image } = values;
+      if (!title || !description || !category || !image) {
+        return showError("Please input all field");
+      }
+
+      try {
+        setLoading(true);
+        const res =
+          type === "edit"
+            ? await editCategory(id, values)
+            : await createPosts(values);
+
+        if (res.ok) {
+          showSuccess(`${type === "edit" ? "Post Updated" : "Post Created"}`);
+          resetForm();
+
+          router.push("/dashboard/all-posts");
+          const data = await res.json();
+          handleNotification(data?.data?.title);
+
+          // update store
+          if (type === "edit") {
+            return dispatch(addPost(data.data._id, data.data));
+          } else {
+            return dispatch(addPost(data.data));
+          }
+        } else {
+          showError("Failed");
+        }
+      } catch (error) {
+        console.log("error", error);
+        showError("Internal Server Error");
+      } finally {
+        setLoading(false);
+      }
     },
   });
 
@@ -128,12 +178,19 @@ const CreatePost = () => {
                   <p className="text-sm text-gray">Visibility: Public</p>
                   <p className="text-sm text-gray">Publish: Immidiately</p>
                 </div>
-                <button
-                  type="submit"
-                  className="button-dark w-full mt-2 rounded-none"
-                >
-                  Publish
-                </button>
+                {loading ? (
+                  <button
+                    type="submit"
+                    className="w-full bg-black text-white rounded-md border border-black text-main font-semibold px-5 py-1.5 flex items-center justify-center gap-2 pointer-events-none"
+                  >
+                    <ButtonSpinner />
+                    <span>Posting...</span>
+                  </button>
+                ) : (
+                  <button type="submit" className="w-full button-dark me-auto">
+                    Publish
+                  </button>
+                )}
               </div>
 
               {/* category */}

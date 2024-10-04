@@ -37,10 +37,6 @@ const categories = createSlice({
     },
 
     editCategory: (state, action) => {
-      const filteredCategory = state.categoriesData.filter(
-        (item) => item?._id === action.payload.id
-      );
-
       state.categoriesData = state.categoriesData.map((item) =>
         item._id === action.payload.id
           ? { ...item, ...action.payload.data }
@@ -50,5 +46,5 @@ const categories = createSlice({
   },
 });
 
-export const { setCategories, addCategory } = categories.actions;
+export const { addCategory, editCategory } = categories.actions;
 export default categories.reducer;

@@ -1,9 +1,11 @@
+import { getAllPosts } from "@/libs/post";
 import AllPosts from "./AllPosts";
 
-const page = () => {
+const page = async () => {
+
   return (
     <>
-      <AllPosts />
+      <AllPosts  />
     </>
   );
 };
