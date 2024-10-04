@@ -6,8 +6,6 @@ export async function POST(req, res) {
   const formData = await req.json();
   const { tags } = formData;
   const toString = tags?.join(" ");
-  console.log("toString", toString);
-  console.log("tags", tags);
 
   try {
     await connectDB();

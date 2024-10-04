@@ -37,8 +37,16 @@ const posts = createSlice({
     addPost: (state, action) => {
       state.postsData.push(action.payload);
     },
+
+    editPost: (state, action) => {
+      state.postsData = state.postsData.map((item) =>
+        item._id === action.payload.id
+          ? { ...item, ...action.payload.data }
+          : item
+      );
+    },
   },
 });
 
-export const { addPost } = posts.actions;
+export const { addPost, editPost } = posts.actions;
 export default posts.reducer;

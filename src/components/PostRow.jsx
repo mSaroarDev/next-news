@@ -1,4 +1,5 @@
 import { H5 } from "@/subcomponents/Headings";
+import { SquarePen } from "lucide-react";
 import Link from "next/link";
 
 const PostRow = ({ data }) => {
@@ -6,7 +7,7 @@ const PostRow = ({ data }) => {
     <>
       <Link
         href="/"
-        className="h-auto lg:h-[130px] w-full mb-2 box-shadow flex flex-col md:flex-row"
+        className="h-auto lg:h-[130px] w-full mb-2 box-shadow flex flex-col md:flex-row relative"
       >
         <div className="w-full h-[200px] md:h-full md:w-44">
           <img
@@ -30,6 +31,17 @@ const PostRow = ({ data }) => {
           <p className="text-sm text-gray">posted by: Saroar</p>
           <p className="text-sm text-gray">comments: 45</p>
         </div>
+
+        <Link
+          href={`/dashboard/all-posts/edit/${data?._id}`}
+          // onClick={(e) => {
+          //   // e.preventDefault(); // Prevent default link behavior
+          //   // e.stopPropagation(); // Stop event propagation to the parent
+          // }}
+          className="absolute top-3 right-3"
+        >
+          <SquarePen className="w-5 h-5 hover:text-brand transition-all duration-200" />
+        </Link>
       </Link>
     </>
   );

@@ -22,3 +22,19 @@ export const getAllPosts = async () => {
 
   return res;
 };
+
+// edit posts
+export const editPosts = async (id, values) => {
+  const res = await fetch(
+    process.env.NEXT_PUBLIC_BASE_URL + "/api/post/edit?id=" + id,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    }
+  );
+
+  return res;
+};

@@ -4,30 +4,32 @@ import { H5, H6 } from "@/subcomponents/Headings";
 import { motion } from "framer-motion";
 import { Image } from "lucide-react";
 import { Tags } from "./Tags";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import { CldUploadButton } from "next-cloudinary";
 import { showError, showSuccess } from "@/utils/toaster";
 import { editCategory } from "@/libs/category";
-import { createPosts } from "@/libs/post";
+import { createPosts, editPosts } from "@/libs/post";
 import { createNotification } from "@/libs/notification";
-import { addPost } from "@/features/posts/postsSlice";
+import { addPost, editPost } from "@/features/posts/postsSlice";
 import ButtonSpinner from "@/subcomponents/Button Spinner/ButtonSpinner";
 
-const CreatePost = ({ type }) => {
+const CreatePost = ({ type, id }) => {
   // utils
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
 
   // get user info from redux
-  const categories = useSelector((state) => state.categories);
-  const { categoriesData } = categories;
+  const { postsData } = useSelector((state) => state.posts);
+  const { categoriesData } = useSelector((state) => state.categories);
+  const { userData } = useSelector((state) => state.currUser);
 
-  const currUser = useSelector((state) => state.currUser);
-  const { userData } = currUser;
+  // this post
+  const filteredPost = postsData?.filter((post) => post?._id === id);
+  const thisPost = filteredPost[0];
 
   // tags state
   const [inputTag, setInputTag] = useState("");
@@ -57,7 +59,9 @@ const CreatePost = ({ type }) => {
       type: "post create",
       created_by: userData?.name,
       text: `${
-        type === "edit" ? "updated a post" : `created a post "${post}"`
+        type === "edit"
+          ? `updated a post "${post}"`
+          : `created a post "${post}"`
       }`,
     });
   };
@@ -97,7 +101,7 @@ const CreatePost = ({ type }) => {
         setLoading(true);
         const res =
           type === "edit"
-            ? await editCategory(id, values)
+            ? await editPosts(id, values)
             : await createPosts(values);
 
         if (res.ok) {
@@ -110,7 +114,7 @@ const CreatePost = ({ type }) => {
 
           // update store
           if (type === "edit") {
-            return dispatch(addPost(data.data._id, data.data));
+            return dispatch(editPost(data.data._id, data.data));
           } else {
             return dispatch(addPost(data.data));
           }
@@ -126,6 +130,19 @@ const CreatePost = ({ type }) => {
     },
   });
 
+  // set data if type is edit
+  useEffect(() => {
+    formik.setValues({
+      title: thisPost?.title,
+      description: thisPost?.description,
+      category: thisPost?.category?._id,
+      image: thisPost?.image,
+      tags: tags,
+    });
+    setImage(thisPost?.image);
+    setTags(thisPost?.tags);
+  }, [id]);
+
   return (
     <>
       <motion.div
@@ -135,7 +152,10 @@ const CreatePost = ({ type }) => {
         // className="grid grid-cols-12 gap-2 h-fit"
       >
         {/* main form */}
-        <H5 text={"Add New Post"} className="text-lg font-bold" />
+        <H5
+          text={type === "edit" ? "Edit Post" : "Create New Post"}
+          className="text-lg font-bold"
+        />
 
         {/* profile update */}
         <Form onSubmit={formik.handleSubmit} className="mt-5">
@@ -188,7 +208,7 @@ const CreatePost = ({ type }) => {
                   </button>
                 ) : (
                   <button type="submit" className="w-full button-dark me-auto">
-                    Publish
+                    {type === "edit" ? "Update" : "Publish"}
                   </button>
                 )}
               </div>
@@ -285,6 +305,21 @@ const CreatePost = ({ type }) => {
                   </div>
                 </div>
               </div>
+
+              {/* delete */}
+              {type === "edit" && (
+                <div className="w-full border border-brand/20 px-4 py-2 mb-5">
+                  <H6
+                    text={"Delete Post"}
+                    className="text-base font-bold border-b border-brand/20 pb-2"
+                  />
+                  <div className="py-2">
+                    <button className="bg-red-600 text-white rounded-md px-4 py-2 w-full hover:bg-red-600/20 hover:text-red-600 transition-all duration-200">
+                      Delete Post
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </Form>
