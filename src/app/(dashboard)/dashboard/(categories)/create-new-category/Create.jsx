@@ -1,6 +1,9 @@
 "use client";
 import BackButton from "@/components/BackButton";
-import { addCategory, setCategories } from "@/features/category/categorySlice";
+import {
+  addCategory,
+  editCategorySlice,
+} from "@/features/category/categorySlice";
 import { createCategory, editCategory } from "@/libs/category";
 import { createNotification } from "@/libs/notification";
 import ButtonSpinner from "@/subcomponents/Button Spinner/ButtonSpinner";
@@ -45,6 +48,7 @@ const CreateCategory = ({ type, id }) => {
   const [featured, setFeatured] = useState(
     type === "edit" ? filteredCategory?.isFeatured : false
   );
+
   const handleFeatured = () => {
     setFeatured((prev) => {
       const newValue = !prev;
@@ -89,7 +93,7 @@ const CreateCategory = ({ type, id }) => {
 
           if (type === "edit") {
             return dispatch(
-              addCategory(categoryData.data._id, categoryData.data)
+              editCategorySlice(categoryData.data._id, categoryData.data)
             );
           } else {
             return dispatch(addCategory(categoryData.data));

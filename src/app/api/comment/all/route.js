@@ -1,5 +1,6 @@
 import commentsModel from "@/db/models/comments";
 import { NextResponse } from "next/server";
+import postsModel from "@/db/models/posts";
 
 export async function GET(req, res) {
   const { searchParams } = new URL(req.url);

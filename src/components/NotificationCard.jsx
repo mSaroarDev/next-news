@@ -19,9 +19,9 @@ const NotificationCard = ({ data }) => {
   // generate icon
   const generateIcon = () => {
     if (type === "loggin") {
-      return <UserRoundCheck className="w-6 h-6 text-green-600" />;
-    } else if (type === "comment") {
-      return <MessagesSquare className="w-6 h-6" />;
+      return <UserRoundCheck className="w-6 h-6 text-blue-600" />;
+    } else if (type === "new comment") {
+      return <MessagesSquare className="w-6 h-6 text-green-600" />;
     } else if (type === "like") {
       return <ThumbsUp className="w-6 h-6" />;
     } else if (type === "unlike") {

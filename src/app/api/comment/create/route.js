@@ -13,6 +13,9 @@ export async function POST(req, res) {
       ...formData,
     });
     const data = await newData.save();
+    const createdData = await commentsModel
+      .findOne({ _id: data?._id })
+      .populate("post");
 
     // store this comment to target post
     await postsModel.findByIdAndUpdate(
@@ -26,7 +29,7 @@ export async function POST(req, res) {
       }
     );
 
-    return NextResponse.json({ msg: "success", data }, { status: 200 });
+    return NextResponse.json({ msg: "success", createdData }, { status: 200 });
   } catch (error) {
     console.log("error in api/comment/create", error);
     return NextResponse.json({ msg: "error", error }, { status: 500 });

@@ -19,6 +19,7 @@ import {
   addComment,
   fetchPublicComments,
 } from "@/features/publicComments/publicCommentsSlice";
+import { createNotification } from "@/libs/notification";
 
 const ArtcleDetailsPage = ({ data }) => {
   // redux
@@ -40,7 +41,17 @@ const ArtcleDetailsPage = ({ data }) => {
 
   useEffect(() => {
     dispatch(fetchPublicComments());
-  }, [data?.id]);
+  }, [data?._id, publicCommentsData]);
+
+  // create notification
+  const handleNotification = async (creator, text, postData) => {
+    await createNotification({
+      type: "new comment",
+      created_by: creator,
+      text: text + ` ` + `"${postData?.title}"`,
+      notification_on: `/article/${postData?._id}?title=${postData?.title}&content=${postData?.seo}`,
+    });
+  };
 
   // utils
   const [loading, setLoading] = useState(false);
@@ -62,14 +73,18 @@ const ArtcleDetailsPage = ({ data }) => {
           showSuccess("Comment added");
           resetForm();
 
-          // dispatch new comment to state
+          // create notificaion
           const response = await res.json();
-          dispatch(
-            addComment({
-              id: data?._id,
-              data: response?.data,
-            })
+          await handleNotification(
+            response?.createdData?.user,
+            "commented on ",
+            response?.createdData?.post
           );
+
+          // dispatch new comment to state
+          dispatch(addComment(response?.createdData));
+
+          console.log("not dispatched");
         } else {
           showError("Comment Failed");
         }

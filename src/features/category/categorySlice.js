@@ -36,7 +36,7 @@ const categories = createSlice({
       state.categoriesData = [...state.categoriesData, action.payload];
     },
 
-    editCategory: (state, action) => {
+    editCategorySlice: (state, action) => {
       state.categoriesData = state.categoriesData.map((item) =>
         item._id === action.payload.id
           ? { ...item, ...action.payload.data }
@@ -46,5 +46,5 @@ const categories = createSlice({
   },
 });
 
-export const { addCategory, editCategory } = categories.actions;
+export const { addCategory, editCategorySlice } = categories.actions;
 export default categories.reducer;

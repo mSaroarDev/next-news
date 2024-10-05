@@ -1,6 +1,5 @@
 "use client";
 import { getComments } from "@/libs/comment";
-import { getAllPosts } from "@/libs/post";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 // fetch the api
@@ -38,7 +37,8 @@ const publicComments = createSlice({
 
   reducers: {
     addComment: (state, action) => {
-      state.publicCommentsData.unshift(action.payload.data);
+      console.log("data in slice", action.payload.data);
+      state.publicCommentsData.unshift(action.payload);
     },
   },
 });
