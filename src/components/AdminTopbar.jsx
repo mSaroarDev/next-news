@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/libs/user";
 import { showSuccess } from "@/utils/toaster";
 import { useRouter } from "next/navigation";
-import { persistor } from "@/app/store/store";
+import { persistor } from "@/features/store/store";
 
 const AdminTopbar = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);

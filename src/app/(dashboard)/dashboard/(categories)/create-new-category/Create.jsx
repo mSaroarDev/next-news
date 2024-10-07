@@ -2,7 +2,7 @@
 import BackButton from "@/components/BackButton";
 import {
   addCategory,
-  editCategorySlice,
+  editCategoryData
 } from "@/features/category/categorySlice";
 import { createCategory, editCategory } from "@/libs/category";
 import { createNotification } from "@/libs/notification";
@@ -93,7 +93,10 @@ const CreateCategory = ({ type, id }) => {
 
           if (type === "edit") {
             return dispatch(
-              editCategorySlice(categoryData.data._id, categoryData.data)
+              editCategoryData({
+                id: categoryData.data._id,
+                data: categoryData.data,
+              })
             );
           } else {
             return dispatch(addCategory(categoryData.data));

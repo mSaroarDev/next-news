@@ -60,7 +60,7 @@ const CreatePost = ({ type, id }) => {
     await createNotification({
       type: actionType,
       created_by: userData?.name,
-      text: msg + ` ` + `"${post}"`,
+      text: msg + ` ` + `"${post}"`, 
       notification_on,
     });
   };
