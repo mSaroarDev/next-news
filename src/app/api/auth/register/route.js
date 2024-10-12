@@ -3,10 +3,11 @@ import { NextResponse } from "next/server";
 import userModel from "@/db/models/user";
 import bcrypt from "bcrypt";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req, res) {
   // get values
   const formData = await req.json();
-  console.log("formData", formData);
 
   const { email, password } = formData;
 

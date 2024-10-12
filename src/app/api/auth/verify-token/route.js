@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req, res) {
   try {
     const token = req.cookies.get("_private_key")?.value;

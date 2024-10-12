@@ -2,6 +2,8 @@ import { connectDB } from "@/db/connectDB";
 import notificationModel from "@/db/models/notifications";
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req, res) {
   const formData = await req.json();
   const { type, created_by, notification_on, text } = formData;

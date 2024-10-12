@@ -9,9 +9,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 const CategoryPage = () => {
   // redux
-  const allCategory = useSelector((state) => state.categories);
-  const { categoriesData } = allCategory;
-  
+  const { categoriesData } = useSelector((state) => state.categories);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [categoriesData]);
+
   return (
     <>
       <motion.div

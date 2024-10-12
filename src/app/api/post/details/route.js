@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import categoryModel from "@/db/models/category";
 import commentsModel from "@/db/models/comments";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req, res) {
   //   get the id
   const { searchParams } = new URL(req.url);

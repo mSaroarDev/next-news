@@ -2,6 +2,8 @@ import { connectDB } from "@/db/connectDB";
 import postsModel from "@/db/models/posts";
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req, res) {
   const formData = await req.json();
   const { tags } = formData;
