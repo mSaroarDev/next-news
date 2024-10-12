@@ -3,13 +3,9 @@ import { SquarePen } from "lucide-react";
 import Link from "next/link";
 
 const PostRow = ({ data, userData }) => {
-  
   return (
     <>
-      <Link
-        href="/"
-        className="h-auto lg:h-[130px] w-full mb-2 box-shadow flex flex-col md:flex-row relative"
-      >
+      <div className="h-auto lg:h-[130px] w-full mb-2 box-shadow flex flex-col md:flex-row relative">
         <div className="w-full h-[200px] md:h-full md:w-44">
           <img
             src={
@@ -41,7 +37,7 @@ const PostRow = ({ data, userData }) => {
             <SquarePen className="w-5 h-5 hover:text-brand transition-all duration-200" />
           </Link>
         )}
-      </Link>
+      </div>
     </>
   );
 };
